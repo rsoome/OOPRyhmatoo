@@ -12,8 +12,18 @@ import java.util.Arrays;
 public class UnWrapper {
     public static void main(String[] args) throws IOException, InterruptedException {
         boolean verbose = false;
-        if(args.length > 1 && args[1].equals("-v")) verbose = true;
-        File file = new File(args[0]);
+        boolean compile = false;
+        for (int i = 0; i < args.length - 1; i++) {
+            if (args.length > 1) {
+                if (args[i].equals("-v")) {
+                    verbose = true;
+                }
+                if (args[i].equals("-compile")) {
+                    compile = true;
+                }
+            }
+        }
+        File file = new File(args[args.length - 1]);
         if(verbose) System.out.println(file.toString());
         String[] filelist = file.list();
         if(verbose) System.out.println("Files found in the folder: " + Arrays.toString(filelist));
@@ -48,7 +58,7 @@ public class UnWrapper {
             }
         }
 
-        if(files.length() > 0) {
+        if(files.length() > 0 && compile) {
             String path = System.getenv("Path").split(";")[0];
             String[] command = {"cmd",};
             Process p = Runtime.getRuntime().exec(command);
