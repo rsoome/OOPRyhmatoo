@@ -3,6 +3,7 @@ import java.io.OutputStream;
 
 /**
  * Created by Rasmus Soome on 9/14/2016.
+ * Code from: http://stackoverflow.com/questions/4157303/how-to-execute-cmd-commands-via-java
  */
 class SyncPipe implements Runnable
 {
