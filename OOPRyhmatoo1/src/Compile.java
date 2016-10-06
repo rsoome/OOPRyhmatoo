@@ -6,7 +6,7 @@ import java.io.PrintWriter;
  * Code from: http://stackoverflow.com/questions/4157303/how-to-execute-cmd-commands-via-java
  * This class is for compiling the files in a specified folder.
  */
-public class Compile {
+public class Compile implements ColoredText{
 
     /**
      * The method to compile the specified files.
@@ -39,7 +39,7 @@ public class Compile {
             int returnCode = p.waitFor();
             if(verbose) System.out.println("Return code = " + returnCode);
 
-            System.out.println("Compiling completed." + System.lineSeparator());
+            System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET + System.lineSeparator());
         } else {
             System.out.println("There's nothing to compile" + System.lineSeparator());
         }

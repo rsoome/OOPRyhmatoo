@@ -28,7 +28,7 @@ public class PackageRemover implements ColoredText{
      */
     public String remove() throws IOException {
         if (verbose) System.out.println("The folder in which I'm looking for files to edit: "
-                + ANSI_BLUE + file.toString() + ANSI_RESET + System.lineSeparator());
+                + ANSI_BLUE + canonicalPath + ANSI_RESET + System.lineSeparator());
         String[] filelist = file.list();
         if (verbose) System.out.println("Files found in the folder: " + arrayToString(filelist) + System.lineSeparator());
         String filesToCompile = "";
@@ -69,7 +69,7 @@ public class PackageRemover implements ColoredText{
                 line = null;
             }
         }
-        System.out.println("Package removing completed." + System.lineSeparator());
+        System.out.println(ANSI_GREEN + "Package removing completed." + ANSI_RESET + System.lineSeparator());
         return filesToCompile;
     }
 
