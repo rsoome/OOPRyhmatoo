@@ -1,86 +1,38 @@
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
+
 
 /**
  * Created by Rasmus Soome on 9/14/2016.
+ * The program removes packages from .java files and compiles them if needed.
  */
 public class UnWrapper {
     public static void main(String[] args) throws IOException, InterruptedException {
+        //Initialize verbose for printing extra information of the process.
         boolean verbose = false;
+        //Initialize compile to know whether or not to also compile the files
         boolean compile = false;
-        for (int i = 0; i < args.length - 1; i++) {
+        //Initalize folder in which the files will be looked for from the command line argument entered last
+        File folder = new File(args[args.length - 1]);
+        String canonicalPath = folder.getCanonicalPath();
+
+        //Iterate through command line arguments to set new values for verbose and compile
+        for (String arg : args) {
             if (args.length > 1) {
-                if (args[i].equals("-v")) {
+                if (arg.equals("-v")) {
                     verbose = true;
                 }
-                if (args[i].equals("-compile")) {
+                if (arg.equals("-compile")) {
                     compile = true;
                 }
             }
         }
-        //START: siit alates võiks koodi eraldi klassi "PackageRemover" meetodisse "removePackages" panna. Muutujad privaatseks!!!
-        File file = new File(args[args.length - 1]);
-        if (verbose) System.out.println(file.toString());
-        String[] filelist = file.list();
-        if (verbose) System.out.println("Files found in the folder: " + Arrays.toString(filelist));
-        String loc = file.getCanonicalPath();
-        String files = "";
-        String line;
-        for (String el : filelist) {
-            String elwloc = loc + "\\" + el;
-            if (el.contains(".java")) {
-                if (verbose) System.out.println(elwloc);
-                BufferedReader br = new BufferedReader(new FileReader(elwloc));
-                line = br.readLine();
-                while (!line.contains("package")) {
-                    if (line.contains("class")) {
-                        if (verbose) System.out.println("This file does not have a package");
-                        line = null;
-                        break;
-                    } else line = br.readLine();
-                }
-                files += el + " ";
-                if (line != null) {
-                    if (verbose) System.out.println("Removing package");
-                    Path path = Paths.get(elwloc);
-                    Charset charset = StandardCharsets.UTF_8;
-                    String content = new String(Files.readAllBytes(path), charset);
-                    content = content.replaceAll(line, "");
-                    Files.write(path, content.getBytes(charset));
-                }
-                line = null;
-            }
-        }
-        //END: kuni siiani peaks kood minema "PackageRemoverisse"
+
+        PackageRemover remover = new PackageRemover(verbose, canonicalPath, folder);
+        String toCompile = remover.remove();
 
         if (compile) {
-            //START: Sellest osast teha klassi Compile meetod compile.
-            if (files.length() > 0) {
-                String path = System.getenv("Path").split(";")[0];
-                String[] command = {"cmd",};
-                Process p = Runtime.getRuntime().exec(command);
-                new Thread(new SyncPipe(p.getErrorStream(), System.err)).start();
-                new Thread(new SyncPipe(p.getInputStream(), System.out)).start();
-                PrintWriter stdin = new PrintWriter(p.getOutputStream());
-                if (verbose) System.out.println("Changing cmd encoding to UTF-8");
-                stdin.println("chcp 65001");
-                if (verbose) System.out.println("Changing to drive " + loc.substring(0, 2));
-                stdin.println(loc.substring(0, 2));
-                if (verbose) System.out.println("Going to " + loc.substring(2, loc.length()));
-                stdin.println("cd " + loc.substring(2, loc.length()));
-                //stdin.println("path = \"" + path + "\"");
-                if (verbose) System.out.println("Compiling files.");
-                stdin.println("javac -cp . -encoding utf8 " + files);
-                stdin.close();
-                int returnCode = p.waitFor();
-                System.out.println("Return code = " + returnCode);
-            } else System.out.println("There's nothing to compile");
-            //END: Compile
+            Compile compiler = new Compile();
+            compiler.compile(toCompile, canonicalPath, verbose);
         }
     }
     //Mõelda, kas saab programmile veel mingit funktsionaalsust juurde lisada.
