@@ -37,7 +37,7 @@ public class Compile implements ColoredText{
             stdin.println("javac -cp . -encoding utf8 " + toCompile);
             stdin.close();
             int returnCode = p.waitFor();
-            if(verbose) System.out.println("Return code = " + returnCode);
+            if(verbose) System.out.println("Return code = " + returnCode + System.lineSeparator());
 
             System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET + System.lineSeparator());
         } else {
