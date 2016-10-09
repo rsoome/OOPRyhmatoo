@@ -4,7 +4,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Rasmus Soome on 10/6/2016.
@@ -12,34 +14,40 @@ import java.util.Arrays;
  */
 public class PackageRemover implements ColoredText{
     private boolean verbose;
-    private String canonicalPath;
-    private File file;
 
-    public PackageRemover(boolean verbose, String canonicalPath, File file) throws IOException {
+    public PackageRemover(boolean verbose) throws IOException {
         this.verbose = verbose;
-        this.canonicalPath = canonicalPath;
-        this.file = file;
     }
 
     /**
      * Method that removes packages from .java files in the given folder
-     * @return all the .java files from the folder to be passed on for compiling.
+     * @return all the .java files and their corresponding directories from the folder to be passed on for compiling.
      * @throws IOException
      */
-    public String remove() throws IOException {
+    public List<String> remove(File file) throws IOException {
+        String canonicalPath = file.getCanonicalPath();
         if (verbose) System.out.println("The folder in which I'm looking for files to edit: "
                 + ANSI_BLUE + canonicalPath + ANSI_RESET + System.lineSeparator());
         String[] filelist = file.list();
         if (verbose) System.out.println("Files found in the folder: " + arrayToString(filelist) + System.lineSeparator());
-        String filesToCompile = "";
         //We create the line variable without a value. The line will only have a value if it contains the line
         // on which the package is stated.
         String line;
-        for (String file : filelist) {
-            String fileWLocation = canonicalPath + "\\" + file;
+        List<String> filesForCompiling = new ArrayList<>();
+        filesForCompiling.add(canonicalPath);
+        for (String currentFile : filelist) {
+            String fileWLocation = canonicalPath + "\\" + currentFile;
+            //Enter recursively if the current file is a directory.
+            File newFile = new File(fileWLocation);
+            if (newFile.isDirectory()){
+                if(verbose) System.out.println(ANSI_YELLOW + "Found a subdirectory: " + ANSI_BLUE + fileWLocation
+                        + ANSI_YELLOW + ". Entering recursively." + ANSI_RESET + System.lineSeparator());
+                filesForCompiling.addAll(remove(newFile));
+            }
             //If the observed file is .java, see if it needs changing
-            if (file.contains(".java")) {
-                if (verbose) System.out.println("Looking at: " + ANSI_BLUE + file + ANSI_RESET + System.lineSeparator());
+            if (currentFile.contains(".java")) {
+                filesForCompiling.add(currentFile);
+                if (verbose) System.out.println("Looking at: " + ANSI_BLUE + currentFile + ANSI_RESET + System.lineSeparator());
                 BufferedReader br = new BufferedReader(new FileReader(fileWLocation));
                 line = br.readLine();
                 //Check the content of the file to find a line containing package
@@ -53,8 +61,6 @@ public class PackageRemover implements ColoredText{
                         break;
                     } else line = br.readLine();
                 }
-                //Add the file to a string of .java files in the folder for later compiling
-                filesToCompile += file + " ";
                 //If the line has a value that means it contains the package line so we remove the line from the file
                 if (line != null) {
                     if (verbose) System.out.println(ANSI_PURPLE + "Removing package" + ANSI_RESET + System.lineSeparator());
@@ -69,8 +75,9 @@ public class PackageRemover implements ColoredText{
                 line = null;
             }
         }
-        System.out.println(ANSI_GREEN + "Package removing completed." + ANSI_RESET + System.lineSeparator());
-        return filesToCompile;
+        System.out.println(ANSI_GREEN + "Package removing in " + ANSI_BLUE + canonicalPath + ANSI_GREEN + " completed." +
+                ANSI_RESET + System.lineSeparator());
+        return filesForCompiling;
     }
 
     //The method creates a colored text string from a string array.
