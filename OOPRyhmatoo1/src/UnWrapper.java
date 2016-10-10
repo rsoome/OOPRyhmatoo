@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.util.List;
 
@@ -29,11 +30,11 @@ public class UnWrapper {
         }
 
         PackageRemover remover = new PackageRemover(verbose);
-        List<String> toCompile = remover.remove(folder);
+        remover.remove(folder);
 
         if (compile) {
-            Compile compiler = new Compile(toCompile, verbose);
-            compiler.iterateThroughFilesAndCompile();
+            Compile compiler = new Compile(verbose);
+            compiler.findSubFoldersAndCompile(folder);
         }
     }
     //Mõelda, kas saab programmile veel mingit funktsionaalsust juurde lisada.

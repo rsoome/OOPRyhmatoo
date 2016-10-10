@@ -1,6 +1,5 @@
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * Created by Rasmus Soome on 10/6/2016.
@@ -13,33 +12,35 @@ import java.util.List;
 
 public class Compile implements ColoredText{
 
-    private List<String> toCompile;
     private boolean verbose;
 
-    public Compile(List<String> toCompile, boolean verbose) {
-        this.toCompile = toCompile;
+    public Compile(boolean verbose) {
         this.verbose = verbose;
-        if (verbose) System.out.println("Compiler created." + System.lineSeparator());
+        if (verbose){
+            System.out.println("Compiler created." + System.lineSeparator());
+        }
     }
 
-    public void iterateThroughFilesAndCompile() throws IOException, InterruptedException {
-        for (int i = 0; i < toCompile.size(); i++){
-            String file = toCompile.get(i);
-            if (file.contains(".java")){
-                String path = toCompile.get(i - 1);
-                if(verbose) System.out.println("Compiling files in: " + ANSI_BLUE + path + ANSI_RESET + System.lineSeparator());
-                String files = "";
-                for (int j = i; j < toCompile.size(); j++){
-                    file = toCompile.get(j);
-                    if (file.contains(".java")) files += file + " ";
-                    if (!file.contains(".java") || j == toCompile.size() - 1){
-                        i = j;
-                        break;
-                    }
+    public void findSubFoldersAndCompile(File folder) throws IOException, InterruptedException {
+
+        String path = new String(folder.getCanonicalPath().getBytes(Charset.defaultCharset()));
+        boolean containsCompilable = false;
+
+        File[] fileList = folder.listFiles();
+        if (fileList != null) {
+            for (File currentFile : fileList) {
+                if (currentFile.isDirectory()) {
+                    findSubFoldersAndCompile(currentFile);
+                } else {
+                    containsCompilable = true;
                 }
-                compile(path, files);
+
             }
+        } else {
+            System.out.println(ANSI_RED + "Etteantud kausta ei eksisteeri" + ANSI_RESET);
         }
+
+        if (containsCompilable) compile(path);
     }
 
     /**
@@ -47,11 +48,14 @@ public class Compile implements ColoredText{
      * @throws IOException
      * @throws InterruptedException
      */
-    private void compile(String path, String files) throws IOException, InterruptedException {
+    private void compile(String path) throws IOException, InterruptedException {
 
         //Set the command to start cmd
         String[] command = {"cmd",};
-        if (verbose) System.out.println("Getting runtime and compiling files." + System.lineSeparator());
+        if (verbose){
+            System.out.println("Getting runtime and compiling files." + System.lineSeparator());
+            System.out.println("Compiling at: " + ANSI_BLUE + path + ANSI_RESET + System.lineSeparator());
+        }
         //Get runtime from system and start cmd
         Process p = Runtime.getRuntime().exec(command);
         new Thread(new SyncPipe(p.getErrorStream(), System.err)).start();
@@ -59,7 +63,7 @@ public class Compile implements ColoredText{
         PrintWriter stdin = new PrintWriter(p.getOutputStream());
         stdin.println("@echo off");
         //Set cmd character encoding to UTF-8
-        stdin.println("chcp 65001");
+        //stdin.println("chcp 65001");
         //Change drive to the drive specified in the given path
         String drive = path.substring(0, 2);
         stdin.println(drive);
@@ -67,10 +71,10 @@ public class Compile implements ColoredText{
         String dir = path.substring(2, path.length());
         stdin.println("cd " + dir);
         //Compile the given files
-        stdin.println("javac -cp . " +  " -encoding utf8 " + files);
+        stdin.println("javac -cp . -encoding utf8 ./*.java");
         stdin.close();
         int returnCode = p.waitFor();
         if(verbose) System.out.println("Return code = " + returnCode);
-        System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET + System.lineSeparator());
+        System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
     }
 }
