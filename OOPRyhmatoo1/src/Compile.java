@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Scanner;
 
 /**
  * Created by Rasmus Soome on 10/6/2016.
@@ -71,10 +72,31 @@ public class Compile implements ColoredText{
         String dir = path.substring(2, path.length());
         stdin.println("cd " + dir);
         //Compile the given files
-        stdin.println("javac -cp . -encoding utf8 ./*.java");
+        stdin.println("javac -cp . -encoding utf8 ./*.java 2> output.txt");
         stdin.close();
         int returnCode = p.waitFor();
         if(verbose) System.out.println("Return code = " + returnCode);
-        System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
+
+        Scanner output = new Scanner(new File(path + "\\output.txt"));
+        if (!(output.hasNextLine())) {
+            System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
+        } else {
+            System.out.println(ANSI_RED + "Compiling failed.");
+            while (output.hasNextLine()){
+                System.out.println(output.nextLine());
+            }
+            System.out.println(ANSI_RESET);
+        }
+        output.close();
+        p = Runtime.getRuntime().exec(command);
+        new Thread(new SyncPipe(p.getErrorStream(), System.err)).start();
+        new Thread(new SyncPipe(p.getInputStream(), System.out)).start();
+        stdin = new PrintWriter(p.getOutputStream());
+        stdin.println("@echo off");
+        stdin.println(drive);
+        stdin.println("cd " + dir);
+        stdin.println("del output.txt");
+        stdin.close();
+        p.waitFor();
     }
 }
