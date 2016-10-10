@@ -77,7 +77,8 @@ public class Compile implements ColoredText{
         int returnCode = p.waitFor();
         if(verbose) System.out.println("Return code = " + returnCode);
 
-        Scanner output = new Scanner(new File(path + "\\output.txt"));
+        File outputFile = new File(path + "\\output.txt");
+        Scanner output = new Scanner(outputFile);
         if (!(output.hasNextLine())) {
             System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
         } else {
@@ -88,15 +89,6 @@ public class Compile implements ColoredText{
             System.out.println(ANSI_RESET);
         }
         output.close();
-        p = Runtime.getRuntime().exec(command);
-        new Thread(new SyncPipe(p.getErrorStream(), System.err)).start();
-        new Thread(new SyncPipe(p.getInputStream(), System.out)).start();
-        stdin = new PrintWriter(p.getOutputStream());
-        stdin.println("@echo off");
-        stdin.println(drive);
-        stdin.println("cd " + dir);
-        stdin.println("del output.txt");
-        stdin.close();
-        p.waitFor();
+        outputFile.delete();
     }
 }
