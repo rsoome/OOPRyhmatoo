@@ -1,4 +1,7 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
@@ -63,8 +66,6 @@ public class Compile implements ColoredText{
         new Thread(new SyncPipe(p.getInputStream(), System.out)).start();
         PrintWriter stdin = new PrintWriter(p.getOutputStream());
         stdin.println("@echo off");
-        //Set cmd character encoding to UTF-8
-        //stdin.println("chcp 65001");
         //Change drive to the drive specified in the given path
         String drive = path.substring(0, 2);
         stdin.println(drive);
@@ -77,18 +78,23 @@ public class Compile implements ColoredText{
         int returnCode = p.waitFor();
         if(verbose) System.out.println("Return code = " + returnCode);
 
+
         File outputFile = new File(path + "\\output.txt");
-        Scanner output = new Scanner(outputFile);
-        if (!(output.hasNextLine())) {
-            System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
-        } else {
-            System.out.println(ANSI_RED + "Compiling failed.");
-            while (output.hasNextLine()){
-                System.out.println(output.nextLine());
+        try {
+            Scanner output = new Scanner(outputFile);
+            if (!(output.hasNextLine())) {
+                System.out.println(ANSI_GREEN + "Compiling completed." + ANSI_RESET);
+            } else {
+                System.out.println(ANSI_RED + "Compiling failed.");
+                while (output.hasNextLine()) {
+                    System.out.println(output.nextLine());
+                }
+                System.out.println(ANSI_RESET);
             }
-            System.out.println(ANSI_RESET);
+            output.close();
+            outputFile.delete();
+        } catch (Exception e){
+            System.out.println(ANSI_RED + "The path " + path + " could not be found." + ANSI_RESET);
         }
-        output.close();
-        outputFile.delete();
     }
 }

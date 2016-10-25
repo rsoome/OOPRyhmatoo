@@ -15,7 +15,6 @@ public class UnWrapper {
         boolean compile = false;
         //Initalize folder in which the files will be looked for from the command line argument entered last
         File folder = new File(args[args.length - 1]);
-        String canonicalPath = folder.getCanonicalPath();
 
         //Iterate through command line arguments to set new values for verbose and compile
         for (String arg : args) {
