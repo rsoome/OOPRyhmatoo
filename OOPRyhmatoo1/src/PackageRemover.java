@@ -22,13 +22,10 @@ public class PackageRemover implements ColoredText{
         if (verbose) System.out.println("The folder in which I'm looking for files to edit: "
                 + ANSI_BLUE + canonicalPath + ANSI_RESET + System.lineSeparator());
         String[] fileList = file.list();
-        System.out.println(Arrays.toString(fileList));
         if (verbose) System.out.println("Found in the folder: " + arrayToString(fileList) + System.lineSeparator());
         String line;
         for (String currentFile : fileList) {
-            System.out.println(currentFile);
             String fileWLocation = canonicalPath + "\\" + currentFile;
-            System.out.println(fileWLocation);
             //Enter recursively if the current file is a directory.
             File newFile = new File(fileWLocation);
             if (newFile.isDirectory()){

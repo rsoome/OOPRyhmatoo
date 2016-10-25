@@ -41,7 +41,7 @@ public class Compile implements ColoredText{
 
             }
         } else {
-            System.out.println(ANSI_RED + "Etteantud kausta ei eksisteeri" + ANSI_RESET);
+            System.out.println(ANSI_RED + "The specified folder does not exist." + ANSI_RESET);
         }
 
         if (containsCompilable) compile(path);
