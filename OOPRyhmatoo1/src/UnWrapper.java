@@ -28,9 +28,11 @@ public class UnWrapper {
             }
         }
 
+        //Create package remover instance and remove packages
         PackageRemover remover = new PackageRemover(verbose);
         remover.remove(folder);
 
+        //If the program is set to compile then create a compiler instance and compile
         if (compile) {
             Compile compiler = new Compile(verbose);
             compiler.findSubFoldersAndCompile(folder);

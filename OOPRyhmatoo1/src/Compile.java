@@ -25,6 +25,7 @@ public class Compile implements ColoredText{
         }
     }
 
+    //Method for finding subfolders
     public void findSubFoldersAndCompile(File folder) throws IOException, InterruptedException {
 
         String path = new String(folder.getCanonicalPath().getBytes(Charset.defaultCharset()));

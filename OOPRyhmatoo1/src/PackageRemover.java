@@ -17,17 +17,20 @@ public class PackageRemover implements ColoredText{
     }
 
 
-    public void remove(File file) throws IOException {
-        String canonicalPath = file.getCanonicalPath();
+    //Package removing method.
+    public void remove(File folder) throws IOException {
+        //Find the canonichal path of the folder given
+        String canonicalPath = folder.getCanonicalPath();
         if (verbose) System.out.println("The folder in which I'm looking for files to edit: "
                 + ANSI_BLUE + canonicalPath + ANSI_RESET + System.lineSeparator());
-        String[] fileList = file.list();
+        String[] fileList = folder.list();
         if (verbose) System.out.println("Found in the folder: " + arrayToString(fileList) + System.lineSeparator());
         String line;
+        //Iterate through files
         for (String currentFile : fileList) {
             String fileWLocation = canonicalPath + "\\" + currentFile;
-            //Enter recursively if the current file is a directory.
             File newFile = new File(fileWLocation);
+            //Enter recursively if the current file is a directory.
             if (newFile.isDirectory()){
                 if(verbose) System.out.println(ANSI_YELLOW + "Found a subdirectory: " + ANSI_BLUE + fileWLocation
                         + ANSI_YELLOW + ". Entering recursively." + ANSI_RESET + System.lineSeparator());
@@ -73,6 +76,7 @@ public class PackageRemover implements ColoredText{
         return arrayInString;
     }
 
+    //Method for reading file content.
     private String readFile(BufferedReader br) throws IOException {
         String content = "";
         String line = br.readLine();
