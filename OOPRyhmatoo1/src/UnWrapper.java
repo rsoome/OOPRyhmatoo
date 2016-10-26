@@ -25,6 +25,11 @@ public class UnWrapper {
                 if (arg.equals("-compile")) {
                     compile = true;
                 }
+                if (arg.equals("-help")){
+                    System.out.println("-help displays this help, -compile also compiles the given files, -v verbose" +
+                            " for displaying extra information, the last argument shoud be the root path to files, root" +
+                            " path can contain subfolders which will be looked into also.");
+                }
             }
         }
 
