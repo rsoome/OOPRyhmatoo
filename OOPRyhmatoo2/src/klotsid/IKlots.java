@@ -1,3 +1,5 @@
+package klotsid;
+
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
@@ -21,22 +23,9 @@ public class IKlots extends Klots{
         asendid[1] = asend2;
 
         setAsendid(asendid);
+
     }
 
-    public static void main(String[] args) {
-        Klots iKlots = new IKlots();
 
-        int[][][] asendid = iKlots.getAsendid();
-
-        for (int i = 0; i < 2; i++){
-            System.out.println();
-            for (int j = 0; j < 4; j++){
-                for (int k = 0; k < 4; k++){
-                    System.out.print(asendid[i][j][k]);
-                }
-                System.out.println();
-            }
-        }
-    }
 
 }
