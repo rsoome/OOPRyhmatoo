@@ -23,11 +23,7 @@ public abstract class Klots {
     private int klotsiX0;
 
     public void muudaAsendit(int suund){
-        int uusAsend = asend + suund;
-
-        if(uusAsend != asendid.length && uusAsend != -1 ) asend = uusAsend;
-        else if (uusAsend == asendid.length) asend = 0;
-        else asend = asendid.length - 1;
+        asend = (asend + asendid.length + suund) % asendid.length;
 
         leiaAsendiKõrgusJaLaius();
 
