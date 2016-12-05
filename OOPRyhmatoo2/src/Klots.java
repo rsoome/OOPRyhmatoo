@@ -6,11 +6,7 @@ public abstract class Klots {
     private int asend = 0;
 
     void muudaAsendit(int suund){
-        int uusAsend = asend + suund;
-
-        if(uusAsend != asendid.length && uusAsend != -1 ) asend = uusAsend;
-        else if (uusAsend == asendid.length) asend = 0;
-        else asend = asendid.length - 1;
+        asend = (asend + asendid.length + suund) % asendid.length;
     }
 
     public int[][][] getAsendid() {

@@ -1,7 +1,7 @@
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
-public class IKlots extends Klots{
+public class IKlots extends Klots {
 
     public IKlots() {
         int[][][] asendid = new int[2][4][4];
