@@ -9,6 +9,7 @@ public class Taimer {
 
     private long periood = -1;
     private long algusAeg = -1;
+    private boolean staatus = false;
 
     public Taimer(){};
 
@@ -26,4 +27,8 @@ public class Taimer {
         algusAeg = System.currentTimeMillis();
         return true;
     }
+
+    public boolean getStaatus(){return staatus;}
+    public void setStaatus(boolean staatus){this.staatus = staatus;}
+
 }

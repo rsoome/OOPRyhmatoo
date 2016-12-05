@@ -23,13 +23,13 @@ public class GraafilineEsitus extends Application {
     @Override
     public void start(Stage peaLava){
         stage = peaLava;
-        String name = "main.fxml";
+        String name = "./resources/main.fxml";
         Parent scene = loadFxml(name);
 
         initPrimaryStage(peaLava, scene);
-        boolean[][] testSisu = new boolean[22][10];
+        int[][] testSisu = new int[22][10];
         for(int i = 0; i < 22; i++) {
-            testSisu[i][i % 10] = true;
+            testSisu[i][i % 10] = 1;
         }
         renderGame(testSisu);
     }
@@ -44,7 +44,7 @@ public class GraafilineEsitus extends Application {
         peaLava.show();
     }
 
-    public void renderGame(boolean[][] gameState) {
+    public void renderGame(int[][] gameState) {
         Canvas field = (Canvas) stage.getScene().lookup("#field");
         int blockSizeX = (int) field.getWidth() / gameState[0].length;
         int blockSizeY = (int) field.getHeight() / gameState.length;
@@ -54,7 +54,7 @@ public class GraafilineEsitus extends Application {
         graphicsContext.setFill(Color.RED);
         for(int y = 0; y < gameState.length; y++) {
             for(int x = 0; x < gameState[0].length; x++) {
-                if (gameState[y][x]) {
+                if (gameState[y][x] == 1) {
                     graphicsContext.fillRect(x * blockSizeX, y * blockSizeY, blockSizeX, blockSizeY);
                 }
             }

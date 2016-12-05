@@ -1,5 +1,9 @@
+import graafiline.GraafilineEsitus;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import klotsid.*;
 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import klotsid.Klots;
@@ -7,10 +11,13 @@ import klotsid.Klots;
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
-public class Mänguloogika {
+public class Mänguloogika{
 
     static final int VÄLJAKUKÕRGUS = 13;
     static final int VÄLJAKULAIUS = 10;
+    static final int PAREMALE = 1;
+    static final int VASAKULE = -1;
+    static final int ALLA = 0;
 
     int[][] väljak = new int[VÄLJAKUKÕRGUS][VÄLJAKULAIUS];
     private Klots[] klotsid = {new IKlots(), new JKlots(), new LKlots(), new OKlots(), new SKlots(), new TKlots(), new ZKlots()};
@@ -18,8 +25,11 @@ public class Mänguloogika {
 
     private int skoor = 0;
     private int level = 1;
+    private int cleared = 0;
+    Taimer mänguTaimer = new Taimer(1/level * 1000);
 
     public boolean sisestaEemaldaKlots(int sisestaVõiEemalda){
+        if(!mänguTaimer.getStaatus()){ mänguTaimer.start(); mänguTaimer.setStaatus(true);}
         for (int[] koordinaadiPaar : praeguneKlots.klotsiKoordinaadid()){
             //System.out.println("Y: " + koordinaadiPaar[1]);
             if (sisestaVõiEemalda == 1 && väljak[koordinaadiPaar[1]][3 + koordinaadiPaar[0]] == 1) return false;
@@ -74,10 +84,10 @@ public class Mänguloogika {
             //System.out.println(väljak [praeguneKlots.getY() + praeguneKlots.getKlotsiPõhi() + 1][koordinaadid[i][0] + 3]);
             if (väljak[praeguneKlots.getY() + praeguneKlots.getKlotsiPõhi() + 1][koordinaadid[i][0] + 3] != 0){
                 //System.out.println("alumine hõivatud");
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     public void kontrolliRidu(){
@@ -90,6 +100,8 @@ public class Mänguloogika {
         }
 
         skoor += strike * Math.pow(2, strike) * 10 * (level + 1);
+        cleared += strike;
+        if (cleared % 20 == 0) level++;
     }
 
     public int[][] getVäljak() {
@@ -114,5 +126,49 @@ public class Mänguloogika {
 
     public void setPraeguneKlots(Klots praeguneKlots) {
         this.praeguneKlots = praeguneKlots;
+    }
+
+    public boolean uuendaVäljakuSeis(){
+        if (kontrolliAlumist()){
+            kontrolliRidu();
+            praeguneKlots.reset();
+            praeguneKlots = klotsid[(int) (Math.random() * 7)];
+        }
+        if (mänguTaimer.onAeg()){
+            praeguneKlots.uuendaY(1);
+        }
+        return true;
+    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        Mänguloogika mänguloogika = new Mänguloogika();
+        graafiline.GraafilineEsitus graafika = new GraafilineEsitus();
+        graafika.launch(GraafilineEsitus.class);
+        for (int i = 0; i < Mänguloogika.VÄLJAKULAIUS; i++)
+            mänguloogika.getVäljak()[Mänguloogika.VÄLJAKUKÕRGUS - 1][i] = 1;
+
+        boolean alumineVaba = true;
+
+        mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
+
+        while (mänguloogika.sisestaEemaldaKlots(1)) {
+            while (true) {
+
+                graafika.renderGame(mänguloogika.getVäljak());
+                mänguloogika.prindiVäljakuSeis();
+
+                if (!mänguloogika.kontrolliAlumist()) break;
+
+                mänguloogika.sisestaEemaldaKlots(0);
+
+                mänguloogika.getPraeguneKlots().uuendaY(1);
+
+                mänguloogika.sisestaEemaldaKlots(1);
+            }
+            mänguloogika.kontrolliRidu();
+            mänguloogika.prindiVäljakuSeis();
+            mänguloogika.getPraeguneKlots().reset();
+            mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
+        }
     }
 }

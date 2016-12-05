@@ -33,7 +33,7 @@ public class Test2 {
 
                 mänguloogika.sisestaEemaldaKlots(1);
             }
-            System.out.println("klotsid.Klots paigas");
+            System.out.println("Klots paigas");
             mänguloogika.prindiVäljakuSeis();
             mänguloogika.kontrolliRidu();
             mänguloogika.prindiVäljakuSeis();
