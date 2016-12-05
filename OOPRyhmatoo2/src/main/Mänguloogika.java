@@ -1,12 +1,10 @@
+
+package main;
 import graafiline.GraafilineEsitus;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import klotsid.*;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import klotsid.Klots;
 
 /**
  * Created by Rasmus Soome on 11/20/2016.
@@ -38,8 +36,7 @@ public class Mänguloogika{
         return true;
     }
 
-    private void liiguta(int suund){
-
+    public static void liiguta(int suund){
     }
 
     public void prindiVäljakuSeis(){

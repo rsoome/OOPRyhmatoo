@@ -1,5 +1,4 @@
-import java.sql.Time;
-import java.util.Timer;
+package main;
 
 /**
  * Created by Rasmus Soome on 12/2/2016.

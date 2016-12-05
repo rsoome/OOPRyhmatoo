@@ -7,8 +7,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import main.Mänguloogika;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,19 +21,17 @@ import java.net.URL;
 public class GraafilineEsitus extends Application {
 
     private Stage stage;
+    private int suunaMuut = 0;
+    private int asendiMuut = 0;
+    private int kõrguseMuut = 0;
 
     @Override
-    public void start(Stage peaLava){
+    public void start(Stage peaLava) {
         stage = peaLava;
         String name = "./resources/main.fxml";
         Parent scene = loadFxml(name);
 
         initPrimaryStage(peaLava, scene);
-        int[][] testSisu = new int[22][10];
-        for(int i = 0; i < 22; i++) {
-            testSisu[i][i % 10] = 1;
-        }
-        renderGame(testSisu);
     }
 
     private void initPrimaryStage(Stage peaLava, Parent scene) {
@@ -41,26 +41,47 @@ public class GraafilineEsitus extends Application {
             Platform.exit();
             System.exit(0);
         });
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            switch (event.getCode()) {
+                case A:
+                    suunaMuut--;
+                    break;
+                case S:
+                    kõrguseMuut++;
+                    break;
+                case D:
+                    suunaMuut++;
+                    break;
+            }
+        });
         peaLava.show();
     }
 
     public void renderGame(int[][] gameState) {
-        Canvas field = (Canvas) stage.getScene().lookup("#field");
+        Platform.runLater(() -> renderGameInner(gameState));
+    }
+
+    //võtab ette inti maatriksi ja vaatab , mis kohad on täidetud ja kuvab canvase vastavalt sellele
+    private void renderGameInner(int[][] gameState) {
+        Canvas field = (Canvas) stage.getScene().lookup("#field"); //otsitakse element IDga field
         int blockSizeX = (int) field.getWidth() / gameState[0].length;
         int blockSizeY = (int) field.getHeight() / gameState.length;
-        GraphicsContext graphicsContext = field.getGraphicsContext2D();
+        GraphicsContext graphicsContext = field.getGraphicsContext2D(); //joonistada saab stuffi
         graphicsContext.setFill(Color.BLACK);
         graphicsContext.fillRect(0, 0, field.getWidth(), field.getHeight());
         graphicsContext.setFill(Color.RED);
+
+        //käiakse elemendid läbi.. kui on midagi, siis värvitakse kast punaseks
         for(int y = 0; y < gameState.length; y++) {
             for(int x = 0; x < gameState[0].length; x++) {
-                if (gameState[y][x] == 1) {
+                if (gameState[y][x] > 0) {
                     graphicsContext.fillRect(x * blockSizeX, y * blockSizeY, blockSizeX, blockSizeY);
                 }
             }
         }
     }
 
+    //laeb Fxml failist kasutajaliidese kirjelduse
     private Parent loadFxml(String name) {
         try {
             URL resource = getClass().getClassLoader().getResource(name);
