@@ -1,16 +1,16 @@
+package main;
+
 import klotsid.*;
 
 import java.util.Scanner;
-
-import klotsid.Klots;
 
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
 public class Mänguloogika {
 
-    static final int VÄLJAKUKÕRGUS = 13;
-    static final int VÄLJAKULAIUS = 10;
+    public static final int VÄLJAKUKÕRGUS = 22;
+    public static final int VÄLJAKULAIUS = 10;
 
     int[][] väljak = new int[VÄLJAKUKÕRGUS][VÄLJAKULAIUS];
     private Klots[] klotsid = {new IKlots(), new JKlots(), new LKlots(), new OKlots(), new SKlots(), new TKlots(), new ZKlots()};
@@ -28,8 +28,7 @@ public class Mänguloogika {
         return true;
     }
 
-    private void liiguta(int suund){
-
+    public void liiguta(int suund){
     }
 
     public void prindiVäljakuSeis(){
