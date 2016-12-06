@@ -28,6 +28,8 @@ public abstract class Klots {
         leiaAsendiKõrgusJaLaius();
 
         klotsiX0 = (int) (Math.round(laius/2.0) - 1);
+        klotsiParemPool = laius - 1 - klotsiX0;
+        klotsiVasakPool = 0 - klotsiX0;
         absoluutneKõrgus = asendid.length;
         absoluutneLaius = asendid[0].length;
     }
@@ -38,6 +40,8 @@ public abstract class Klots {
         leiaAsendiKõrgusJaLaius();
 
         klotsiX0 = (int) (Math.round(laius/2.0) - 1);
+        klotsiParemPool = laius - klotsiX0;
+        klotsiVasakPool = 0 - klotsiX0;
 
         absoluutneKõrgus = asendid.length;
         absoluutneLaius = asendid[0].length;
@@ -142,8 +146,6 @@ public abstract class Klots {
 
         int kõrgus = 0;
         int laius = 0;
-        int paremPool = 0;
-        int vasakPool = 3;
         int klotsiPõhi = 0;
 
 
@@ -156,10 +158,6 @@ public abstract class Klots {
                     if (laiuseKontrollBitid[j] == 0){
                         laius++;
                         laiuseKontrollBitid[j] = 1;
-                        int uusParemPool = j - 2;
-                        int uusVasakPool = j;
-                        if (uusParemPool > paremPool) paremPool = uusParemPool;
-                        if (uusVasakPool < vasakPool) vasakPool = uusVasakPool;
 
                     }
                     if (kõrguseKontrollBitid[i] == 0){
@@ -173,8 +171,6 @@ public abstract class Klots {
 
         this.laius = laius;
         this.kõrgus = kõrgus;
-        klotsiParemPool = paremPool;
-        klotsiVasakPool = vasakPool;
         this.klotsiPõhi = klotsiPõhi;
 
     }

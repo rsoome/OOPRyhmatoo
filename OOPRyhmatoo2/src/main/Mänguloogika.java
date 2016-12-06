@@ -120,10 +120,12 @@ public class Mänguloogika implements Runnable {
         int[][] koordinaadid = praeguneKlots.klotsiKoordinaadid();
         int parempoolseimKoordinaat = 0;
         for (int[] koordinaadiPaar : koordinaadid){
+            System.out.println(Arrays.toString(koordinaadiPaar));
+            System.out.println((koordinaadiPaar[0] + 3) + ", " + koordinaadiPaar[1]);
+            if (väljak[koordinaadiPaar[1]][4 + koordinaadiPaar[0]] == 1) return false;
             if (koordinaadiPaar[0] > parempoolseimKoordinaat) parempoolseimKoordinaat = koordinaadiPaar[0];
         }
-        if (3 + parempoolseimKoordinaat > VÄLJAKULAIUS) return false;
-        
+        if (4 + parempoolseimKoordinaat > VÄLJAKULAIUS - 1) return false;
         return true;
     }
 
