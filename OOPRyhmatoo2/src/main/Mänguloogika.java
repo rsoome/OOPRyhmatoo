@@ -105,7 +105,7 @@ public class Mänguloogika implements Runnable {
                 }
                 break;
             case 1 :
-                if (kontrolliKlotsiParemPool()){
+                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1){
                     sisestaEemaldaKlots(0);
                     praeguneKlots.uuendaX(1);
                     sisestaEemaldaKlots(1);
@@ -116,18 +116,28 @@ public class Mänguloogika implements Runnable {
         }
     }
 
-    private boolean kontrolliKlotsiParemPool(){
+    /*private boolean kontrolliKlotsiParemPool(){
         int[][] koordinaadid = praeguneKlots.klotsiKoordinaadid();
-        int parempoolseimKoordinaat = 0;
-        for (int[] koordinaadiPaar : koordinaadid){
+        int tase = 0;
+        int tasemeParemPoolseim = 0;
+        for (int i = 0; i < koordinaadid.length; i++){
+            int[] koordinaadiPaar = koordinaadid[i];
             System.out.println(Arrays.toString(koordinaadiPaar));
-            System.out.println((koordinaadiPaar[0] + 3) + ", " + koordinaadiPaar[1]);
-            if (väljak[koordinaadiPaar[1]][4 + koordinaadiPaar[0]] == 1) return false;
-            if (koordinaadiPaar[0] > parempoolseimKoordinaat) parempoolseimKoordinaat = koordinaadiPaar[0];
+            if (koordinaadiPaar[1] == tase && koordinaadiPaar[0] > tasemeParemPoolseim){
+                tasemeParemPoolseim = koordinaadiPaar[0];
+            }
+            else {
+                if (väljak[koordinaadid[i-1][1]][4 + koordinaadid[i-1][0]] == 1) return false;
+                i--;
+                tase++;
+            }
+            //System.out.println(praeguneKlots.getKlotsiParemPool());
+            System.out.println((3 + koordinaadiPaar[0]) + ", " + koordinaadiPaar[1]);
+            if (4 + koordinaadiPaar[0] > VÄLJAKULAIUS - 1 || väljak[koordinaadiPaar[1]][3 + koordinaadiPaar[0]] == 1) return false;
         }
-        if (4 + parempoolseimKoordinaat > VÄLJAKULAIUS - 1) return false;
+        //if (4 + parempoolseimKoordinaat > VÄLJAKULAIUS - 1) return false;
         return true;
-    }
+    }*/
 
     public void prindiVäljakuSeis(){
         for (int i = 0; i < VÄLJAKUKÕRGUS; i++){
@@ -153,12 +163,16 @@ public class Mänguloogika implements Runnable {
     public void kontrolliRidu(){
         int summa;
         int strike = 0;
-        for (int i = väljak.length - 2; i < 0; i--){
-            System.out.println("*");
+        for (int i = väljak.length - 2; i > 0; i--){
             summa = 0;
             for (int j : väljak[i]) summa += j;
             if(summa == VÄLJAKULAIUS){
                 strike++;
+                for (int j = väljak[i].length - 1; j >= 0; j--){
+                    väljak[i][j] = 0;
+                    täidaTühjadRead();
+                    i++;
+                }
             }
             System.out.println(summa);
         }
@@ -192,4 +206,7 @@ public class Mänguloogika implements Runnable {
         this.praeguneKlots = praeguneKlots;
     }
 
-}
+    public void täidaTühjadRead() {
+
+    }
+    }

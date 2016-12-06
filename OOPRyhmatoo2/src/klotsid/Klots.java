@@ -40,8 +40,6 @@ public abstract class Klots {
         leiaAsendiKõrgusJaLaius();
 
         klotsiX0 = (int) (Math.round(laius/2.0) - 1);
-        klotsiParemPool = laius - klotsiX0;
-        klotsiVasakPool = 0 - klotsiX0;
 
         absoluutneKõrgus = asendid.length;
         absoluutneLaius = asendid[0].length;

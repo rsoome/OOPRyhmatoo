@@ -175,4 +175,8 @@ public class GraafilineEsitus extends Application {
             throw new IllegalArgumentException("Unable to load main scene file", e);
         }
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
