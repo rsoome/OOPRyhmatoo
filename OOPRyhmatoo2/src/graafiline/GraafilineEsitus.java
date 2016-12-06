@@ -43,7 +43,15 @@ public class GraafilineEsitus extends Application {
         Parent scene = loadFxml(name);
 
         initPrimaryStage(peaLava, scene);
+        initGameOver(scene);
         initStartButton();
+        peaLava.show();
+    }
+
+    private void initGameOver(Parent scene) {
+        Button gameOverDismissButton = (Button) scene.getScene().lookup("#gameOverDismiss");
+        gameOverDismissButton.setOnAction(event -> hideGameOver());
+        hideGameOver();
     }
 
     private void initPrimaryStage(Stage peaLava, Parent scene) {
@@ -72,8 +80,7 @@ public class GraafilineEsitus extends Application {
                     break;
             }
         });
-        //renderHighscores(highscoreRepository.findAll());
-        peaLava.show();
+        renderHighscores(highscoreRepository.findAll());
     }
 
     private void initStartButton() {
@@ -145,6 +152,15 @@ public class GraafilineEsitus extends Application {
         mänguLoogikaLõim.interrupt();
         mänguLoogikaLõim = null;
         mänguloogika = null;
+        showGameOver();
+    }
+
+    private void showGameOver() {
+        Platform.runLater(() -> stage.getScene().lookup("#gameOverModal").setVisible(true));
+    }
+
+    private void hideGameOver() {
+        Platform.runLater(() -> stage.getScene().lookup("#gameOverModal").setVisible(false));
     }
 
     //laeb Fxml failist kasutajaliidese kirjelduse

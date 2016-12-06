@@ -18,6 +18,16 @@
       <Pane layoutX="14.0" layoutY="56.0" prefHeight="520.0" prefWidth="400.0" style="-fx-background-color: black;">
          <children>
             <Canvas fx:id="field" height="520.0" width="400.0" />
+            <Pane id="gameOverModal" layoutX="80.0" layoutY="100.0" prefHeight="160.0" prefWidth="240.0" style="-fx-background-color: white;">
+               <children>
+                  <Text layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Game over!" textAlignment="CENTER" textOrigin="CENTER" wrappingWidth="240.0">
+                     <font>
+                        <Font name="Algerian" size="36.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="gameOverDismiss" layoutX="100.0" layoutY="101.0" mnemonicParsing="false" text="OK" />
+               </children>
+            </Pane>
          </children>
       </Pane>
       <Pane layoutX="428.0" layoutY="56.0" prefHeight="520.0" prefWidth="358.0">
@@ -30,22 +40,25 @@
             <Button id="startGame" fx:id="startGame" layoutY="45.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="358.0" text="Alusta mängu" />
             <TableView fx:id="highscores" layoutY="135.0" prefHeight="385.0" prefWidth="358.0">
               <columns>
-                <TableColumn prefWidth="50.0" text="Koht">
+                <TableColumn maxWidth="2000.0" prefWidth="-1.0" text="Koht">
                    <cellValueFactory>
                       <PropertyValueFactory property="place" />
                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn prefWidth="228.0" text="Nimi">
+                <TableColumn maxWidth="10000.0" prefWidth="-1.0" text="Nimi">
                    <cellValueFactory>
                       <PropertyValueFactory property="name" />
                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn minWidth="0.0" prefWidth="78.0" text="Skoor" >
+                <TableColumn maxWidth="4000.0" minWidth="0.0" prefWidth="-1.0" text="Skoor">
                    <cellValueFactory>
                       <PropertyValueFactory property="score" />
                    </cellValueFactory>
                 </TableColumn>
               </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
             <TextField id="name" layoutX="66.0" prefHeight="31.0" prefWidth="292.0" />
             <Label text="Nimi:">
