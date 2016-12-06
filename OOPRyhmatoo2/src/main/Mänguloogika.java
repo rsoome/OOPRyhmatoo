@@ -4,6 +4,7 @@ import graafiline.GraafilineEsitus;
 import klotsid.*;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -104,7 +105,7 @@ public class Mänguloogika implements Runnable {
                 }
                 break;
             case 1 :
-                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1){
+                if (kontrolliKlotsiParemPool()){
                     sisestaEemaldaKlots(0);
                     praeguneKlots.uuendaX(1);
                     sisestaEemaldaKlots(1);
@@ -113,6 +114,16 @@ public class Mänguloogika implements Runnable {
             default:
                 break;
         }
+    }
+
+    private boolean kontrolliKlotsiParemPool(){
+        int[][] koordinaadid = praeguneKlots.klotsiKoordinaadid();
+        int parempoolseimKoordinaat = 0;
+        for (int[] koordinaadiPaar : koordinaadid){
+            if (koordinaadiPaar[0] > parempoolseimKoordinaat) parempoolseimKoordinaat = koordinaadiPaar[0];
+        }
+        if (3 + parempoolseimKoordinaat > VÄLJAKULAIUS)
+        return true;
     }
 
     public void prindiVäljakuSeis(){
@@ -151,7 +162,7 @@ public class Mänguloogika implements Runnable {
 
         skoor += strike * Math.pow(2, strike) * 10 * (level + 1);
         cleared += strike;
-        if (cleared % 20 == 0) level++;
+        if (cleared % 20 == 0 && cleared != 0) level++;
     }
 
     public int[][] getVäljak() {
