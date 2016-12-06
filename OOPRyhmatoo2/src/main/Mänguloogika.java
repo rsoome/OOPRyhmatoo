@@ -38,15 +38,19 @@ public class Mänguloogika implements Runnable {
             getVäljak()[Mänguloogika.VÄLJAKUKÕRGUS - 1][i] = 1;
 
         Taimer mänguTaimer = new Taimer((long) (1.0/level * 1000));
+        Taimer renderTaimer = new Taimer(1);
 
         setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
         mänguTaimer.start();
+        renderTaimer.start();
 
         while (sisestaEemaldaKlots(1)) {
             while (true) {
 
-                graafilineEsitus.renderGame(getVäljak());
-                //prindiVäljakuSeis();
+                if (renderTaimer.onAeg()) {
+                    graafilineEsitus.renderGame(getVäljak());
+                    renderTaimer.start();
+                }
 
                 if (kontrolliAlumist()) break;
 
@@ -71,23 +75,41 @@ public class Mänguloogika implements Runnable {
     public boolean sisestaEemaldaKlots(int sisestaVõiEemalda){
         if(!mänguTaimer.getStaatus()){ mänguTaimer.start(); mänguTaimer.setStaatus(true);}
         for (int[] koordinaadiPaar : praeguneKlots.klotsiKoordinaadid()){
-            //System.out.println("Y: " + koordinaadiPaar[1]);
             if (sisestaVõiEemalda == 1 && väljak[koordinaadiPaar[1]][3 + koordinaadiPaar[0]] == 1) return false;
             väljak[koordinaadiPaar[1]][3 + koordinaadiPaar[0]] = sisestaVõiEemalda;
         }
         return true;
     }
 
+    public void muudaKlotsiAsendit(int suund){
+        sisestaEemaldaKlots(0);
+        praeguneKlots.muudaAsendit(suund);
+        sisestaEemaldaKlots(1);
+    }
+
     public void liiguta(int suund){
+        System.out.println("*");
         switch(suund){
             case -1 :
-                if (4 + praeguneKlots.getX() - praeguneKlots.getKlotsiX0() > 0) praeguneKlots.uuendaX(-1);
+                if (4 + praeguneKlots.getX() - praeguneKlots.getKlotsiX0() > 0){
+                    sisestaEemaldaKlots(0);
+                    praeguneKlots.uuendaX(-1);
+                    sisestaEemaldaKlots(1);
+                }
                 break;
             case 0 :
-                if(!kontrolliAlumist()) praeguneKlots.uuendaY(1);
+                if(!kontrolliAlumist()){
+                    sisestaEemaldaKlots(0);
+                    praeguneKlots.uuendaY(1);
+                    sisestaEemaldaKlots(1);
+                }
                 break;
             case 1 :
-                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1)praeguneKlots.uuendaX(1);
+                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1){
+                    sisestaEemaldaKlots(0);
+                    praeguneKlots.uuendaX(1);
+                    sisestaEemaldaKlots(1);
+                }
                 break;
             default:
                 break;
@@ -102,27 +124,6 @@ public class Mänguloogika implements Runnable {
             System.out.println();
         }
         System.out.println();
-    }
-
-    public void küsiSuunda(Scanner scanner){
-        String suund = "";
-        while (!suund.matches("[wasd]")) {
-            suund = scanner.next();
-        }
-        switch (suund){
-            case "w" :
-                praeguneKlots.muudaAsendit(1);
-                break;
-            case "s" :
-                praeguneKlots.muudaAsendit(-1);
-                break;
-            case "a" :
-                if (4 + praeguneKlots.getX() - praeguneKlots.getKlotsiX0() > 0) praeguneKlots.uuendaX(-1);
-                break;
-            case "d" :
-                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1)praeguneKlots.uuendaX(1);
-                break;
-        }
     }
 
     public boolean kontrolliAlumist(){
@@ -142,7 +143,9 @@ public class Mänguloogika implements Runnable {
         for (int i = väljak.length - 2; i < 0; i--){
             summa = 0;
             for (int j : väljak[i]) summa += j;
-            if(summa == VÄLJAKULAIUS) strike++;
+            if(summa == VÄLJAKULAIUS){
+                strike++;
+            }
         }
 
         skoor += strike * Math.pow(2, strike) * 10 * (level + 1);
@@ -184,38 +187,6 @@ public class Mänguloogika implements Runnable {
             praeguneKlots.uuendaY(1);
         }
         return true;
-    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        graafiline.GraafilineEsitus graafika = new GraafilineEsitus();
-        Mänguloogika mänguloogika = new Mänguloogika(graafika);
-        graafika.launch(GraafilineEsitus.class);
-        for (int i = 0; i < Mänguloogika.VÄLJAKULAIUS; i++)
-            mänguloogika.getVäljak()[Mänguloogika.VÄLJAKUKÕRGUS - 1][i] = 1;
-
-        boolean alumineVaba = true;
-
-        mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
-
-        while (mänguloogika.sisestaEemaldaKlots(1)) {
-            while (true) {
-
-                graafika.renderGame(mänguloogika.getVäljak());
-                //mänguloogika.prindiVäljakuSeis();
-
-                if (!mänguloogika.kontrolliAlumist()) {
-                    System.out.println("*");break;}
-
-                mänguloogika.sisestaEemaldaKlots(0);
-
-                mänguloogika.getPraeguneKlots().uuendaY(1);
-
-                mänguloogika.sisestaEemaldaKlots(1);
-            }
-            mänguloogika.kontrolliRidu();
-            mänguloogika.getPraeguneKlots().reset();
-            mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
-        }
     }
 
 }

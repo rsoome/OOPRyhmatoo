@@ -59,7 +59,7 @@ public class GraafilineEsitus extends Application {
             }
             switch (event.getCode()) {
                 case W:
-                    mänguloogika.getPraeguneKlots().muudaAsendit(1);
+                    mänguloogika.muudaKlotsiAsendit(1);
                     break;
                 case A:
                     mänguloogika.liiguta(Mänguloogika.VASAKULE);
