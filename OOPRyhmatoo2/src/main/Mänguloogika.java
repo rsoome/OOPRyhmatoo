@@ -37,28 +37,33 @@ public class Mänguloogika implements Runnable {
         for (int i = 0; i < Mänguloogika.VÄLJAKULAIUS; i++)
             getVäljak()[Mänguloogika.VÄLJAKUKÕRGUS - 1][i] = 1;
 
-        boolean alumineVaba = true;
+        Taimer mänguTaimer = new Taimer((long) (1.0/level * 1000));
 
         setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
+        mänguTaimer.start();
 
         while (sisestaEemaldaKlots(1)) {
             while (true) {
 
                 graafilineEsitus.renderGame(getVäljak());
-                prindiVäljakuSeis();
+                //prindiVäljakuSeis();
 
-                if (!kontrolliAlumist()) break;
+                if (kontrolliAlumist()) break;
 
-                sisestaEemaldaKlots(0);
-
-                getPraeguneKlots().uuendaY(1);
-
-                sisestaEemaldaKlots(1);
+                if (mänguTaimer.onAeg()) {
+                    sisestaEemaldaKlots(0);
+                    getPraeguneKlots().uuendaY(1);
+                    sisestaEemaldaKlots(1);
+                    mänguTaimer.setPeriood((long) (1.0/level * 1000));
+                    mänguTaimer.start();
+                }
             }
             kontrolliRidu();
             prindiVäljakuSeis();
             getPraeguneKlots().reset();
             setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
+            mänguTaimer.setPeriood((long) (1.0/level * 1000));
+            mänguTaimer.start();
         }
         graafilineEsitus.endGame(0);
     }
@@ -74,6 +79,19 @@ public class Mänguloogika implements Runnable {
     }
 
     public void liiguta(int suund){
+        switch(suund){
+            case -1 :
+                if (4 + praeguneKlots.getX() - praeguneKlots.getKlotsiX0() > 0) praeguneKlots.uuendaX(-1);
+                break;
+            case 0 :
+                if(!kontrolliAlumist()) praeguneKlots.uuendaY(1);
+                break;
+            case 1 :
+                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1)praeguneKlots.uuendaX(1);
+                break;
+            default:
+                break;
+        }
     }
 
     public void prindiVäljakuSeis(){
@@ -108,16 +126,10 @@ public class Mänguloogika implements Runnable {
     }
 
     public boolean kontrolliAlumist(){
-        //System.out.println("*");
         int[][] koordinaadid = praeguneKlots.klotsiKoordinaadid();
         int klotsiKõrgus = koordinaadid[koordinaadid.length - 1][1];
-        //System.out.println("Koordinaatide arv: " + koordinaadid.length);
         for (int i = koordinaadid.length - 1; i >= 0 && koordinaadid[i][1] == klotsiKõrgus; i--){
-            //System.out.println("Kontrollin: " + (koordinaadid[i][0] + 3)+ "," + (praeguneKlots.getY() + praeguneKlots.getKlotsiPõhi() + 1));
-            //System.out.println("Y : " + praeguneKlots.getY() + " Klotsipõhi: " + praeguneKlots.getKlotsiPõhi());
-            //System.out.println(väljak [praeguneKlots.getY() + praeguneKlots.getKlotsiPõhi() + 1][koordinaadid[i][0] + 3]);
             if (väljak[praeguneKlots.getY() + praeguneKlots.getKlotsiPõhi() + 1][koordinaadid[i][0] + 3] != 0){
-                //System.out.println("alumine hõivatud");
                 return true;
             }
         }
@@ -175,7 +187,35 @@ public class Mänguloogika implements Runnable {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        GraafilineEsitus.launch();
+        graafiline.GraafilineEsitus graafika = new GraafilineEsitus();
+        Mänguloogika mänguloogika = new Mänguloogika(graafika);
+        graafika.launch(GraafilineEsitus.class);
+        for (int i = 0; i < Mänguloogika.VÄLJAKULAIUS; i++)
+            mänguloogika.getVäljak()[Mänguloogika.VÄLJAKUKÕRGUS - 1][i] = 1;
+
+        boolean alumineVaba = true;
+
+        mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
+
+        while (mänguloogika.sisestaEemaldaKlots(1)) {
+            while (true) {
+
+                graafika.renderGame(mänguloogika.getVäljak());
+                //mänguloogika.prindiVäljakuSeis();
+
+                if (!mänguloogika.kontrolliAlumist()) {
+                    System.out.println("*");break;}
+
+                mänguloogika.sisestaEemaldaKlots(0);
+
+                mänguloogika.getPraeguneKlots().uuendaY(1);
+
+                mänguloogika.sisestaEemaldaKlots(1);
+            }
+            mänguloogika.kontrolliRidu();
+            mänguloogika.getPraeguneKlots().reset();
+            mänguloogika.setPraeguneKlots(mänguloogika.getKlotsid()[(int) (Math.random() * 7)]);
+        }
     }
 
 }

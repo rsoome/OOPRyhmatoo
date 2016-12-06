@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <children>
+      <Text layoutX="14.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ultimate Tetris" textAlignment="CENTER" textOrigin="TOP" wrappingWidth="772.0">
+         <font>
+            <Font name="Algerian" size="24.0" />
+         </font></Text>
+      <Pane layoutX="14.0" layoutY="56.0" prefHeight="520.0" prefWidth="400.0" style="-fx-background-color: black;">
+         <children>
+            <Canvas fx:id="field" height="520.0" width="400.0" />
+         </children>
+      </Pane>
+      <Pane layoutX="428.0" layoutY="56.0" prefHeight="520.0" prefWidth="358.0">
+         <children>
+            <Text id="score" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Skoor: 0" textOrigin="TOP" wrappingWidth="358.0">
+               <font>
+                  <Font name="Algerian" size="32.0" />
+               </font>
+            </Text>
+            <Button id="startGame" fx:id="startGame" layoutY="45.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="358.0" text="Alusta mängu" />
+            <TableView fx:id="highscores" layoutY="135.0" prefHeight="385.0" prefWidth="358.0">
+              <columns>
+                <TableColumn prefWidth="50.0" text="Koht">
+                   <cellValueFactory>
+                      <PropertyValueFactory property="place" />
+                   </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="228.0" text="Nimi">
+                   <cellValueFactory>
+                      <PropertyValueFactory property="name" />
+                   </cellValueFactory>
+                </TableColumn>
+                <TableColumn minWidth="0.0" prefWidth="78.0" text="Skoor" >
+                   <cellValueFactory>
+                      <PropertyValueFactory property="score" />
+                   </cellValueFactory>
+                </TableColumn>
+              </columns>
+            </TableView>
+            <TextField id="name" layoutX="66.0" prefHeight="31.0" prefWidth="292.0" />
+            <Label text="Nimi:">
+               <font>
+                  <Font name="Algerian" size="24.0" />
+               </font></Label>
+         </children>
+      </Pane>
+   </children>
+</Pane>

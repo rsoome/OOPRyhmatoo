@@ -39,7 +39,7 @@ public class GraafilineEsitus extends Application {
     @Override
     public void start(Stage peaLava) {
         stage = peaLava;
-        String name = "main.fxml";
+        String name = "./resources/main.fxml";
         Parent scene = loadFxml(name);
 
         initPrimaryStage(peaLava, scene);
@@ -72,7 +72,7 @@ public class GraafilineEsitus extends Application {
                     break;
             }
         });
-        renderHighscores(highscoreRepository.findAll());
+        //renderHighscores(highscoreRepository.findAll());
         peaLava.show();
     }
 

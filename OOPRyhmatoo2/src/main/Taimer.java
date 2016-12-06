@@ -7,7 +7,7 @@ package main;
 public class Taimer {
 
     private long periood = -1;
-    private long algusAeg = -1;
+    private long lõppAeg = -1;
     private boolean staatus = false;
 
     public Taimer(){};
@@ -18,12 +18,11 @@ public class Taimer {
 
     public void setPeriood(long periood){this.periood = periood;}
 
-    public void start(){algusAeg = System.currentTimeMillis();}
+    public void start(){lõppAeg = System.currentTimeMillis() + periood;}
 
     public boolean onAeg(){
-        if (algusAeg - System.currentTimeMillis() > periood)
+        if (lõppAeg - System.currentTimeMillis() > 0)
             return false;
-        algusAeg = System.currentTimeMillis();
         return true;
     }
 
