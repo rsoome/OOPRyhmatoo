@@ -1,5 +1,7 @@
 package main;
 
+import graafiline.GraafilineEsitus;
+
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
@@ -8,7 +10,7 @@ import java.util.Scanner;
  */
 public class Test2 {
 
-    static Mänguloogika mänguloogika = new Mänguloogika();
+    static Mänguloogika mänguloogika = new Mänguloogika(new GraafilineEsitus());
 
     public static void main(String[] args) throws FileNotFoundException {
         //System.setOut(new PrintStream(new BufferedOutputStream(new FileOutputStream("output.txt"))));
