@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class Mänguloogika implements Runnable {
 
-    static final int VÄLJAKUKÕRGUS = 13;
+    static final int VÄLJAKUKÕRGUS = 22;
     static final int VÄLJAKULAIUS = 10;
     public static final int PAREMALE = 1;
     public static final int VASAKULE = -1;
@@ -63,7 +63,7 @@ public class Mänguloogika implements Runnable {
                 }
             }
             kontrolliRidu();
-            prindiVäljakuSeis();
+            //prindiVäljakuSeis();
             getPraeguneKlots().reset();
             setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
             mänguTaimer.setPeriood((long) (1.0/level * 1000));
@@ -88,7 +88,6 @@ public class Mänguloogika implements Runnable {
     }
 
     public void liiguta(int suund){
-        System.out.println("*");
         switch(suund){
             case -1 :
                 if (4 + praeguneKlots.getX() - praeguneKlots.getKlotsiX0() > 0){
@@ -141,11 +140,13 @@ public class Mänguloogika implements Runnable {
         int summa;
         int strike = 0;
         for (int i = väljak.length - 2; i < 0; i--){
+            System.out.println("*");
             summa = 0;
             for (int j : väljak[i]) summa += j;
             if(summa == VÄLJAKULAIUS){
                 strike++;
             }
+            System.out.println(summa);
         }
 
         skoor += strike * Math.pow(2, strike) * 10 * (level + 1);
@@ -175,18 +176,6 @@ public class Mänguloogika implements Runnable {
 
     public void setPraeguneKlots(Klots praeguneKlots) {
         this.praeguneKlots = praeguneKlots;
-    }
-
-    public boolean uuendaVäljakuSeis(){
-        if (kontrolliAlumist()){
-            kontrolliRidu();
-            praeguneKlots.reset();
-            praeguneKlots = klotsid[(int) (Math.random() * 7)];
-        }
-        if (mänguTaimer.onAeg()){
-            praeguneKlots.uuendaY(1);
-        }
-        return true;
     }
 
 }
