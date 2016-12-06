@@ -122,7 +122,8 @@ public class Mänguloogika implements Runnable {
         for (int[] koordinaadiPaar : koordinaadid){
             if (koordinaadiPaar[0] > parempoolseimKoordinaat) parempoolseimKoordinaat = koordinaadiPaar[0];
         }
-        if (3 + parempoolseimKoordinaat > VÄLJAKULAIUS)
+        if (3 + parempoolseimKoordinaat > VÄLJAKULAIUS) return false;
+        
         return true;
     }
 
