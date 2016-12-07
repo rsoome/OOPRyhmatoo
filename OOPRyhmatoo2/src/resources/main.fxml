@@ -11,7 +11,7 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
-      <Text layoutX="14.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ultimate Tetris" textAlignment="CENTER" textOrigin="TOP" wrappingWidth="772.0">
+      <Text layoutX="14.0" layoutY="14.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fucktris" textAlignment="CENTER" textOrigin="TOP" wrappingWidth="772.0">
          <font>
             <Font name="Algerian" size="24.0" />
          </font></Text>

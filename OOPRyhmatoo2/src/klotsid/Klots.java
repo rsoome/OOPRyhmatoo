@@ -1,8 +1,5 @@
 package klotsid;
 
-/**
- * Created by Rasmus Soome on 11/20/2016.
- */
 public abstract class Klots {
 
     private int[][][] asendid;

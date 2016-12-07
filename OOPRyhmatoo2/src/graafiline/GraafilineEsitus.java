@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class GraafilineEsitus extends Application {
+public class GraafilineEsitus extends Application { //javaFx klass, kus saab peale ehitada
 
     private Stage stage; //aken
     private Mänguloogika mänguloogika; //senikaua väärtust pole, kuni ei vajutata starti, teavitab graafilist liidest
@@ -36,15 +36,15 @@ public class GraafilineEsitus extends Application {
     private final HighscoreRepository highscoreRepository = new HighscoreRepository();
 
     @Override
-    public void start(Stage peaLava) {
+    public void start(Stage peaLava) { //kui rakendus tööle pannakse
         stage = peaLava;
         String name = "./resources/main.fxml";
-        Parent scene = loadFxml(name);
+        Parent scene = loadFxml(name); //loeb kasutajaliidese kirjelduse failist
 
-        initPrimaryStage(peaLava, scene);
-        initGameOver(scene);
-        initStartButton();
-        peaLava.show();
+        initPrimaryStage(peaLava, scene); //nuppude handlimine
+        initGameOver(scene); //Game over kiri ja nupp
+        initStartButton(); //Start nupp
+        peaLava.show(); //kuvatakse pealava
     }
 
     private void initGameOver(Parent scene) {
@@ -54,7 +54,7 @@ public class GraafilineEsitus extends Application {
     }
 
     private void initPrimaryStage(Stage peaLava, Parent scene) {
-        peaLava.setTitle("Ultimate Tetris (not really ultimate(yet))");
+        peaLava.setTitle("Fucktris");
         peaLava.setScene(new Scene(scene)); //annab aknale sisu
         peaLava.setOnCloseRequest(t -> { //siis, kui ristit kinni paned
             Platform.exit(); //javaFx jaoks
@@ -129,7 +129,7 @@ public class GraafilineEsitus extends Application {
     public void renderGame(int[][] gameState) {
         int[][] gameStateCopy = new int[gameState.length][];
         for (int i = 0; i < gameState.length; i++) {
-            gameStateCopy[i] = Arrays.copyOf(gameState[i], gameState[i].length);
+            gameStateCopy[i] = Arrays.copyOf(gameState[i], gameState[i].length); //tehakse igast reast koopia
         }
         Platform.runLater(() -> renderGameInner(gameStateCopy));
     }
