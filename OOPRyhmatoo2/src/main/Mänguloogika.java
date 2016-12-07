@@ -1,18 +1,17 @@
 
 package main;
+
 import graafiline.GraafilineEsitus;
 import klotsid.*;
 
-import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
 public class Mänguloogika implements Runnable {
 
-    static final int VÄLJAKUKÕRGUS = 22;
+    static final int VÄLJAKUKÕRGUS = 14;
     static final int VÄLJAKULAIUS = 10;
     public static final int PAREMALE = 1;
     public static final int VASAKULE = -1;
@@ -105,10 +104,12 @@ public class Mänguloogika implements Runnable {
                 }
                 break;
             case 1 :
-                if (kontrolliKlotsiParemPool()){
+                if (3 + praeguneKlots.getX() + praeguneKlots.getLaius() - praeguneKlots.getKlotsiX0()  < VÄLJAKULAIUS - 1){
                     sisestaEemaldaKlots(0);
                     praeguneKlots.uuendaX(1);
                     sisestaEemaldaKlots(1);
+
+
                 }
                 break;
             default:
