@@ -62,14 +62,43 @@ public class Mänguloogika implements Runnable {
                     mänguTaimer.start();
                 }
             }
-            kontrolliRidu();
+            eemaldaTäidetudRead();
             //prindiVäljakuSeis();
             getPraeguneKlots().reset();
             setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
             mänguTaimer.setPeriood((long) (1.0/level * 1000));
             mänguTaimer.start();
         }
-        graafilineEsitus.endGame(0);
+        graafilineEsitus.endGame(skoor);
+    }
+
+    private void eemaldaTäidetudRead() {
+        int[][] uusVäljak = new int[VÄLJAKUKÕRGUS][VÄLJAKULAIUS];
+        uusVäljak[VÄLJAKUKÕRGUS - 1] = väljak[VÄLJAKUKÕRGUS - 1];
+        int eemalatudRidu = 0;
+        int ridaKuhuPanna = VÄLJAKUKÕRGUS - 2;
+        for(int y = VÄLJAKUKÕRGUS - 2; y >= 0; y--) {
+            boolean ridaOnTäis = true;
+            for(int x = 0; x < VÄLJAKULAIUS; x++) {
+                if (väljak[y][x] == 0) {
+                    ridaOnTäis = false;
+                    break;
+                }
+            }
+            if(ridaOnTäis) {
+                eemalatudRidu++;
+            } else {
+                uusVäljak[ridaKuhuPanna] = väljak[y];
+                ridaKuhuPanna--;
+            }
+        }
+        while (ridaKuhuPanna >= 0) {
+            uusVäljak[ridaKuhuPanna] = new int[VÄLJAKULAIUS];
+            ridaKuhuPanna--;
+        }
+        skoor += 100 * eemalatudRidu * eemalatudRidu;
+        väljak = uusVäljak;
+        graafilineEsitus.updateScore(skoor);
     }
 
     public boolean sisestaEemaldaKlots(int sisestaVõiEemalda){

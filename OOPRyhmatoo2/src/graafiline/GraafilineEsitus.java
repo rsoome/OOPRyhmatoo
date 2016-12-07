@@ -154,7 +154,7 @@ public class GraafilineEsitus extends Application {
         }
     }
 
-    private void updateScore(int newScore) {
+    public void updateScore(int newScore) {
         Platform.runLater(() -> updateScoreInternal(newScore));
     }
 
