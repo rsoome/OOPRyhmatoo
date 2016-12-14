@@ -52,9 +52,8 @@ public class Mänguloogika implements Runnable {
                     renderTaimer.start();
                 }
 
-                if (kontrolliAlumist()) break;
-
                 if (mänguTaimer.onAeg()) {
+                    if (kontrolliAlumist()) break;
                     sisestaEemaldaKlots(0);
                     getPraeguneKlots().uuendaY(1);
                     sisestaEemaldaKlots(1);
