@@ -1,18 +1,17 @@
 
 package main;
+
 import graafiline.GraafilineEsitus;
 import klotsid.*;
 
-import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
  * Created by Rasmus Soome on 11/20/2016.
  */
 public class Mänguloogika implements Runnable {
 
-    static final int VÄLJAKUKÕRGUS = 22;
+    static final int VÄLJAKUKÕRGUS = 14;
     static final int VÄLJAKULAIUS = 10;
     public static final int PAREMALE = 1;
     public static final int VASAKULE = -1;
@@ -63,14 +62,43 @@ public class Mänguloogika implements Runnable {
                     mänguTaimer.start();
                 }
             }
-            kontrolliRidu();
+            eemaldaTäidetudRead();
             //prindiVäljakuSeis();
             getPraeguneKlots().reset();
             setPraeguneKlots(getKlotsid()[(int) (Math.random() * 7)]);
             mänguTaimer.setPeriood((long) (1.0/level * 1000));
             mänguTaimer.start();
         }
-        graafilineEsitus.endGame(0);
+        graafilineEsitus.endGame(skoor);
+    }
+
+    private void eemaldaTäidetudRead() {
+        int[][] uusVäljak = new int[VÄLJAKUKÕRGUS][VÄLJAKULAIUS];
+        uusVäljak[VÄLJAKUKÕRGUS - 1] = väljak[VÄLJAKUKÕRGUS - 1];
+        int eemalatudRidu = 0;
+        int ridaKuhuPanna = VÄLJAKUKÕRGUS - 2;
+        for(int y = VÄLJAKUKÕRGUS - 2; y >= 0; y--) {
+            boolean ridaOnTäis = true;
+            for(int x = 0; x < VÄLJAKULAIUS; x++) {
+                if (väljak[y][x] == 0) {
+                    ridaOnTäis = false;
+                    break;
+                }
+            }
+            if(ridaOnTäis) {
+                eemalatudRidu++;
+            } else {
+                uusVäljak[ridaKuhuPanna] = väljak[y];
+                ridaKuhuPanna--;
+            }
+        }
+        while (ridaKuhuPanna >= 0) {
+            uusVäljak[ridaKuhuPanna] = new int[VÄLJAKULAIUS];
+            ridaKuhuPanna--;
+        }
+        skoor += 100 * eemalatudRidu * eemalatudRidu;
+        väljak = uusVäljak;
+        graafilineEsitus.updateScore(skoor);
     }
 
     public boolean sisestaEemaldaKlots(int sisestaVõiEemalda){
@@ -109,6 +137,8 @@ public class Mänguloogika implements Runnable {
                     sisestaEemaldaKlots(0);
                     praeguneKlots.uuendaX(1);
                     sisestaEemaldaKlots(1);
+
+
                 }
                 break;
             default:
