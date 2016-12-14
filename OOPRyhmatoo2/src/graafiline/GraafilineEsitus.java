@@ -54,7 +54,7 @@ public class GraafilineEsitus extends Application { //javaFx klass, kus saab pea
     }
 
     private void initPrimaryStage(Stage peaLava, Parent scene) {
-        peaLava.setTitle("Fucktris");
+        peaLava.setTitle("Ultimate Tetris");
         peaLava.setScene(new Scene(scene)); //annab aknale sisu
         peaLava.setOnCloseRequest(t -> { //siis, kui ristit kinni paned
             Platform.exit(); //javaFx jaoks
